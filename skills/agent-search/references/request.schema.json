@@ -1,0 +1,288 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Search Request",
+  "description": "Portable search tool input; credentials are configured outside the request.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "type": "string",
+      "enum": [
+        "search",
+        "read",
+        "answer",
+        "libraries",
+        "docs",
+        "subdomains",
+        "crawl",
+        "crawl-status",
+        "doctor",
+        "providers"
+      ],
+      "default": "search"
+    },
+    "provider": {
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "Provider name, auto, or up to three comma-separated names."
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "maxItems": 3,
+          "uniqueItems": true
+        }
+      ],
+      "default": "auto"
+    },
+    "query": {
+      "type": "string",
+      "minLength": 1
+    },
+    "intent": {
+      "type": "string",
+      "enum": [
+        "web",
+        "code",
+        "papers",
+        "semantic",
+        "news",
+        "social",
+        "chinese",
+        "research"
+      ],
+      "default": "web"
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 20,
+      "default": 5
+    },
+    "url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "library": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "maxItems": 4
+        }
+      ]
+    },
+    "libraryId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "language": {
+      "type": "string",
+      "minLength": 1
+    },
+    "domain": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      ]
+    },
+    "model": {
+      "type": "string",
+      "minLength": 1
+    },
+    "preset": {
+      "type": "string",
+      "minLength": 1
+    },
+    "depth": {
+      "type": "string",
+      "enum": [
+        "basic",
+        "advanced",
+        "fast",
+        "ultra-fast"
+      ]
+    },
+    "jobId": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]+$"
+    },
+    "timeout": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 180,
+      "default": 60
+    },
+    "maxChars": {
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 100000,
+      "default": 20000
+    },
+    "options": {
+      "type": "object",
+      "description": "Provider-specific fields, checked against the action whitelist at runtime.",
+      "additionalProperties": true
+    },
+    "dryRun": {
+      "type": "boolean",
+      "default": false
+    },
+    "anonymous": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "action": {
+            "enum": [
+              "search",
+              "answer",
+              "libraries",
+              "docs"
+            ]
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "then": {
+        "required": [
+          "query"
+        ]
+      }
+    },
+    {
+      "if": {
+        "not": {
+          "required": [
+            "action"
+          ]
+        }
+      },
+      "then": {
+        "required": [
+          "query"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "action": {
+            "enum": [
+              "read",
+              "crawl"
+            ]
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "then": {
+        "required": [
+          "url"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "action": {
+            "const": "docs"
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "then": {
+        "required": [
+          "libraryId"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "action": {
+            "const": "libraries"
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "then": {
+        "required": [
+          "library"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "action": {
+            "const": "subdomains"
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "then": {
+        "required": [
+          "domain"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "action": {
+            "const": "crawl-status"
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "then": {
+        "required": [
+          "jobId"
+        ]
+      }
+    }
+  ]
+}

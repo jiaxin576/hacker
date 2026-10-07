@@ -1,0 +1,15 @@
+{
+  "name": "hacker-agent-search",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Portable Agent Skills search across ten providers",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test skills/agent-search/scripts/search.test.mjs",
+    "check": "node --check skills/agent-search/scripts/search.mjs",
+    "doctor": "node skills/agent-search/scripts/search.mjs doctor"
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Search"
+  short_description: "Unified search and page reading across ten providers"
+  default_prompt: "Use $agent-search to research this topic and cite the sources."
